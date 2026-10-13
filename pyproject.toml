@@ -1,5 +1,5 @@
 [project]
-name = "streamstats"
+name = "stream analyzer"
 version = "0.1.0"
 description = "Stream analyzer"
 requires-python = ">=3.12"
