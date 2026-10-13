@@ -23,11 +23,11 @@ _PARSERS: dict[str, Parser] = {}
 def register_parser(name: str) -> Callable[[Parser], Parser]:
     """Register a parser function under a format name"""
 
-    def decorator(function: Parser) -> Parser:
+    def decorate(function: Parser) -> Parser:
         _PARSERS[name] = function
         return function
 
-    return decorator
+    return decorate
 
 
 def get_parser(name: str) -> Parser:
