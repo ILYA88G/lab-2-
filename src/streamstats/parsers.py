@@ -39,7 +39,7 @@ def get_parser(name: str) -> Parser:
 
 
 def available_formats() -> list[str]:
-    """Return registered format name in alphabetical order"""
+    """Return registered format names in alphabetical order"""
     return sorted(_PARSERS)
 
 
@@ -50,15 +50,15 @@ def iteration_csv_records(path: Path) -> Iterator[RawRecord]:
         reader = csv.DictReader(file)
         for row in reader:
             if None in row:
-                yield RawRecord(reader.line_num, {}, "row has more than the header")
+                yield RawRecord(reader.line_num, {}, "row has more values than the header")
             else:
                 data: dict[str, object] = {key: value for key, value in row.items()}
                 yield RawRecord(reader.line_num, data)
 
 
 @register_parser("jsonl")
-def iter_jsonl_records(path: Path) -> Iterator[RawRecord]:
-    """Streaming read a JSON Lines file, one line at a time"""
+def iteration_jsonl_records(path: Path) -> Iterator[RawRecord]:
+    """Lazily read a JSON Lines file, one line at a time"""
     with path.open(encoding="utf-8-sig") as file:
         for line_number, line in enumerate(file, start=1):
             if not line.strip():
