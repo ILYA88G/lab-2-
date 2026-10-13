@@ -16,3 +16,6 @@ packages = ["src/streamstats"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.mypy]
+mypy_path = "src"
