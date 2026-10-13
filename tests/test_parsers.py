@@ -9,7 +9,7 @@ CSV_HEADER = "timestamp,level,source,message\n"
 CSV_TEXT = (
     CSV_HEADER
     + "2026-10-07T12:00:00+03:00,INFO,api,started\n"
-    + "2026-10-07T12:00:01+03:00,ERROR,db,failed\n"
+    + "2026-10-07T12:00:02+03:00,ERROR,db,failed\n"
 )
 JSONL_TEXT = (
     '{"timestamp": "2026-10-07T12:00:00Z", "level": "INFO", '
