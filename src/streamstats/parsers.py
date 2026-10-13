@@ -50,7 +50,9 @@ def iteration_csv_records(path: Path) -> Iterator[RawRecord]:
         reader = csv.DictReader(file)
         for row in reader:
             if None in row:
-                yield RawRecord(reader.line_num, {}, "row has more values than the header")
+                yield RawRecord(
+                    reader.line_num, {}, "row has more values than the header"
+                )
             else:
                 data: dict[str, object] = {key: value for key, value in row.items()}
                 yield RawRecord(reader.line_num, data)

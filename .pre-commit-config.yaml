@@ -7,8 +7,7 @@ repos:
         additional_dependencies:
           - types-requests
           - types-PyYAML
-
-
+          - pytest
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.0
