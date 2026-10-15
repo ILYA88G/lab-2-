@@ -72,7 +72,9 @@ def iter_events(
                 event = _build_event(record)
             except InvalidEventError as error:
                 if not skip_invalid:
-                    raise type(error)(f"{path}:{record.line_number}: {error}") from error
+                    raise type(error)(
+                        f"{path}:{record.line_number}: {error}"
+                    ) from error
                 logger.warning(
                     "%s:%d: skipped invalid record: %s", path, record.line_number, error
                 )
