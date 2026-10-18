@@ -1,9 +1,17 @@
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
+from streamstats import parsers
+from streamstats.analysis import analyze_files
 from streamstats.errors import UnsupportedFormatError
-from streamstats.parsers import available_formats, get_parser
+from streamstats.parsers import (
+    RawRecord,
+    available_formats,
+    get_parser,
+    register_parser,
+)
 
 CSV_HEADER = "timestamp,level,source,message\n"
 CSV_TEXT = (
@@ -121,3 +129,31 @@ def test_unknown_format_raises() -> None:
 
 def test_available_formats() -> None:
     assert available_formats() == ["csv", "jsonl"]
+
+
+def test_custom_format_can_be_registered(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(parsers, "_PARSERS", dict(parsers._PARSERS))
+
+    @register_parser("pipe")
+    def iter_pipe_records(path: Path) -> Iterator[RawRecord]:
+        with path.open(encoding="utf-8") as file:
+            for line_number, line in enumerate(file, start=1):
+                timestamp, level, source, message = line.rstrip("\n").split("|")
+                yield RawRecord(
+                    line_number,
+                    {
+                        "timestamp": timestamp,
+                        "level": level,
+                        "source": source,
+                        "message": message,
+                    },
+                )
+
+    assert "pipe" in available_formats()
+    path = tmp_path / "log.pipe"
+    path.write_text("2026-10-07T12:00:00Z|ERROR|db|failed\n", encoding="utf-8")
+    stats = analyze_files([path], "pipe")
+    assert stats.total_events == 1
+    assert stats.top_error_sources() == [("db", 1)]
