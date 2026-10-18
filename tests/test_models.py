@@ -88,4 +88,4 @@ def test_same_moment_in_different_zones_is_equal() -> None:
 def test_event_cannot_be_changed() -> None:
     event = parse_event(GOOD)
     with pytest.raises(AttributeError):
-        setattr(event, "level", "ERROR")
+        setattr(event, "level", "ERROR") #noqa: B010
